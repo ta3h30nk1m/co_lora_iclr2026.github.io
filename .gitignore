@@ -1,0 +1,5 @@
+# Source presentation files are not part of the public website.
+*.pptx
+
+# Local/CI Pages artifact.
+_site/

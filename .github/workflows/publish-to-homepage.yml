@@ -1,0 +1,52 @@
+name: Publish Co-LoRA to personal website
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-colora-to-homepage
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Co-LoRA project page
+        uses: actions/checkout@v6
+        with:
+          path: source
+
+      - name: Check out personal website
+        uses: actions/checkout@v6
+        with:
+          repository: ta3h30nk1m/ta3h30nk1m.github.io
+          token: ${{ secrets.HOMEPAGE_DEPLOY_TOKEN }}
+          path: homepage
+
+      - name: Update the Co-LoRA project directory
+        shell: bash
+        run: |
+          target="homepage/projects/co-lora-iclr2026"
+          rm -rf "$target"
+          mkdir -p "$target/assets"
+          cp source/index.html source/styles.css source/script.js "$target/"
+          cp -R source/assets/. "$target/assets/"
+
+      - name: Commit and push the website update
+        working-directory: homepage
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add projects/co-lora-iclr2026
+          if git diff --cached --quiet; then
+            echo "The published project page is already up to date."
+            exit 0
+          fi
+          git commit -m "Update Co-LoRA project page"
+          git push
