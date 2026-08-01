@@ -1,5 +1,6 @@
 # Co-LoRA Project Page
 
+
 Project page for **Co-LoRA: Collaborative Model Personalization on Heterogeneous Multi-Modal Clients** (ICLR 2026).
 
 The site is dependency-free and can be served directly with GitHub Pages. For local preview:
